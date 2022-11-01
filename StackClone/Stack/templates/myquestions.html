@@ -1,0 +1,68 @@
+{% extends 'base.html'%}
+{%block body_block%}
+
+    <!-- Divider-->
+    <hr class="my-4" />
+
+    {%for q in questions%}
+    <div class="col-md-10 col-lg-8 col-xl-7">
+        <!-- Post preview-->
+        <div class="post-preview">
+            <a href="post.html">
+                <h2 class="post-title">{{q.question}}</h2>
+                <h3 class="post-subtitle">Problems look mighty small from 150 miles up</h3>
+            </a>
+            <p class="post-meta">
+                Posted by
+                <a href="#!">{{q.user}}</a>
+                on {{q.created_date}}</p>
+            <div>
+                <p>
+
+                    
+                    <button class="btn btn-info" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#answerlist{{ forloop.counter }}" aria-expanded="false"
+                        aria-controls="collapseExample">
+                        Answers
+                    </button>
+                </p>
+                <div class="collapse" id="collapseExample{{forloop.counter}}">
+                    <div class="card card-body">
+                        <form action="{%url 'add-answer' q.id %}" method='post'>
+                            {%csrf_token%}
+                            <textarea name="answer" id="" cols="30" rows="3" class="form-control"></textarea>
+                            <input type="submit" value="add" class="mt-2 btn btn-sm btn-success">
+                        </form>
+
+                    </div>
+                </div>
+                <div class="collapse" id="answerlist{{forloop.counter}}">
+                    <div class="card card-body">
+                        <ul class="list-group">
+                        {%for ans in q.fetch_answers%}
+                        <li class="list-group-item">
+                            <a href="{%url 'upvote' ans.id%}" class="btn btn-sm btn-success">UpVote</a>
+                            {{ans.up_vote.all.count}} <span class="text-success">upvotes</span>
+                            {{ans.answer}}</li>
+
+                        {%endfor%}
+                        </ul>
+
+
+                </div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- Divider-->
+        <hr class="my-4" />
+    </div>
+
+
+
+    {%endfor%}
+</div>
+
+
+
+{%endblock%}
